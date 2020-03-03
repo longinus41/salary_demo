@@ -32,7 +32,7 @@ We will provide deployment on Ethereum and testnets like Ganache in the future.
 
 It sets the balance of a given account which represented as address to a new value, and public key of the account will be saved in the contract.
 
-###check balance
+### check balance
 `>getbalance [address]`
 
 It returns the balance of account.
