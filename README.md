@@ -55,7 +55,7 @@ Pay salary to account. For example, the initial balance of account A is _m_, and
 ### withdraw
 `>withdraw [address] [amount]`
 
-Clami a certain amount of money. For example, the initial balance of account A is _m_, and amount withdrawn is _c_, the balance will be _m-c_ after drawings.
+Claim a certain amount of money. For example, the initial balance of account A is _m_, and amount withdrawn is _c_, the balance will be _m-c_ after drawings.
 
 ## Development
 
