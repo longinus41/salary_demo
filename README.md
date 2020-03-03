@@ -19,7 +19,7 @@ $cd app
 $go run main.go
 ```
 
-####initialization
+###initialization
 
 `>init`
 
@@ -27,32 +27,32 @@ It generates genesis account with a given keystore first, and initiate the simul
 
 We will provide deployment on Ethereum and testnets like Ganache in the future.
 
-####set balance
+###set balance
 `>setbalance [address] [amount]`
 
 It sets the balance of a given account which represented as address to a new value, and public key of the account will be saved in the contract.
 
-####check balance
+###check balance
 `>getbalance [address]`
 
 It returns the balance of account.
 
-####set salary
+###set salary
 `>setsalar [address] [amount]`
 
 Similar to `setbalance`
 
-####check salary
+###check salary
 `>getsalary [address]`
 
 Similar to `setsalary`
 
-####payroll
+###payroll
 `>paysalary [address]`
 
 Pay salary to account. For example, the initial balance of account A is _m_, and his salary is _s_, the balance will be _m+s_ after payroll.
 
-####withdraw
+###withdraw
 `>withdraw [address] [amount]`
 
 Clami a certain amount of money. For example, the initial balance of account A is _m_, and amount withdrawn is _c_, the balance will be _m-c_ after drawings.
