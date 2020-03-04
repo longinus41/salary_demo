@@ -4,7 +4,7 @@ import (
 	"crypto/rand"
 	"fmt"
 	"math/big"
-	"mycrypt/utils"
+	"salary_demo/utils"
 )
 
 // GenerateRangeProof makes a range proof

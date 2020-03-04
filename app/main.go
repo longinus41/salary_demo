@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 	"math/big"
-	"mycrypt/command"
-	"mycrypt/contract"
-	"mycrypt/crypto"
 	"os"
+	"salary_demo/command"
+	"salary_demo/contract"
+	"salary_demo/crypto"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/urfave/cli"
@@ -100,7 +100,11 @@ L:
 		fmt.Sscan(Input, &op, &parm1, &parm2)
 		switch op {
 		case "init":
-			Env, Account, _ = command.InitSim()
+			if parm1 == "" && parm2 == "" {
+				Env, Account, _ = command.InitSim()
+			} else {
+				Env, Account, _ = command.Init(parm1, parm2)
+			}
 		case "setbalance":
 			command.SetBalance(Env, Account, parm1, parm2)
 		case "getbalance":

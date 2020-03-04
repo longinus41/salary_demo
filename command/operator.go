@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 	"math/big"
-	"mycrypt/contract"
-	"mycrypt/utils"
+	"salary_demo/contract"
+	"salary_demo/utils"
 )
 
 //SetBalance is the operator for setting balance.

@@ -1,18 +1,21 @@
 package command
 
 import (
+	//"crypto"
 	"fmt"
 	"log"
 	"math/big"
-	"mycrypt/contract"
-	"mycrypt/crypto"
-	"mycrypt/utils"
+	"salary_demo/contract"
+	myCrypto "salary_demo/crypto"
+	"salary_demo/utils"
 	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind/backends"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 var keystoreTest = `
@@ -63,8 +66,8 @@ type Keystore struct {
 
 //Account represents all account information, which includes keystore and private key for elgamal encrption.
 type Account struct {
-	ChainKey   *Keystore
-	AccountKey *crypto.PrivateKey
+	//ChainKey   *Keystore
+	AccountKey *myCrypto.PrivateKey
 	Auth       *bind.TransactOpts
 }
 
@@ -76,10 +79,9 @@ func InitSim() (env *Environment, account *Account, err error) {
 		Key: keystoreTest,
 		Pwd: pwdTest,
 	}
-	account.ChainKey = chainKey
 
-	priv := &crypto.PrivateKey{
-		PublicKey: crypto.PublicKey{
+	priv := &myCrypto.PrivateKey{
+		PublicKey: myCrypto.PublicKey{
 			G: new(big.Int).SetInt64(generator),
 			P: new(big.Int).SetInt64(prime),
 		},
@@ -127,17 +129,59 @@ func InitSim() (env *Environment, account *Account, err error) {
 	return
 }
 
-//Init is the function for initiation, TBA
-func Init(address string) {
-	//env = new(Environment)
-	//env.Backend = nil
-	//conn, err := ethclient.Dial(network)
-	//
-	//fmt.Println("connect to local geth node...", conn)
-	//if err != nil {
-	//	log.Fatalf("could not connect to local node: %v", err)
-	//}
-	//
-	//sc, err := contract.NewContract(common.HexToAddress(contractAddress), conn)
-	//env.Contract = sc
+//Init loads blockchain such as Ehtereum or Ganache and create a transctor from given private key.
+func Init(privKey, contractAddress string) (env *Environment, account *Account, err error) {
+	env = new(Environment)
+	account = new(Account)
+	env.Backend = nil
+
+	//connect to a ethereum network, which is represented as host:port
+	conn, err := ethclient.Dial(network)
+
+	fmt.Println("connect to local geth node...", conn)
+	if err != nil {
+		log.Fatalf("could not connect to local node: %v", err)
+	}
+
+	//create a transctor from given private key
+	pk, err := crypto.HexToECDSA(privKey)
+	auth := bind.NewKeyedTransactor(pk)
+	account.Auth = auth
+	addrTest := "0x" + common.Bytes2Hex(account.Auth.From.Bytes())
+	fmt.Print("account address: ")
+	fmt.Printf(utils.Blue, addrTest)
+
+	//deploy the contract if we have not yet deployed it.
+	if contractAddress == "" {
+		var addr common.Address
+		addr, _, env.Contract, err = contract.DeployContract(account.Auth, conn)
+		if err != nil {
+			log.Fatalf("could not deploy contract: %v", err)
+			return
+		}
+		fmt.Print("salary contract address: ")
+		//fmt.Println(utils.Blue, addr)
+		fmt.Println("0x" + common.Bytes2Hex(addr.Bytes()))
+	} else {
+		//load the contract from given address
+		env.Contract, err = contract.NewContract(common.HexToAddress(contractAddress), conn)
+		if err != nil {
+			log.Fatalf("could not get contract: %v", err)
+			return
+		}
+		fmt.Print("salary contract address: ")
+		fmt.Println(utils.Blue, contractAddress)
+	}
+
+	priv := &myCrypto.PrivateKey{
+		PublicKey: myCrypto.PublicKey{
+			G: new(big.Int).SetInt64(generator),
+			P: new(big.Int).SetInt64(prime),
+		},
+		X: new(big.Int).SetInt64(privateKey),
+	}
+	priv.H = new(big.Int).Exp(priv.G, priv.X, priv.P)
+	account.AccountKey = priv
+
+	return
 }

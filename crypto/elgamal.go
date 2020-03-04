@@ -13,7 +13,7 @@ import (
 	"errors"
 	"io"
 	"math/big"
-	"mycrypt/utils"
+	"salary_demo/utils"
 )
 
 // PublicKey represents an ElGamal public key.

@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"log"
 	"math/big"
-	myCrypto "mycrypt/crypto"
+	myCrypto "salary_demo/crypto"
 
 	"strings"
 
@@ -36,7 +36,9 @@ func SetBalance(sim *backends.SimulatedBackend, auth *bind.TransactOpts, contrac
 		return false, err
 	}
 	fmt.Println("encrypted balance:", C, D)
-	sim.Commit()
+	if sim != nil {
+		sim.Commit()
+	}
 	return true, nil
 }
 
