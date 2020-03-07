@@ -151,10 +151,17 @@ contract Salary {
 		return _x+_y;
 	}
 
-	function toBytes(uint256 _x) public pure returns(bytes memory b){
+	function hash(uint256 _x, uint256 _y) public pure returns(bytes32){
+		bytes32 h = keccak256(abi.encode(_x));
+		//bytes32 hy = keccak256(_y)
+		return h;
+	}
+
+	function UinttoBytes(uint256 _x) public pure returns(bytes memory b){
         b = new bytes(32);
         for (uint i = 0; i < 32; i++) {
             b[i] = byte(uint8(_x / (2**(8*(31 - i)))));
         }
 	}
+
 }

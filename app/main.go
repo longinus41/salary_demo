@@ -4,13 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"log"
-	"math/big"
 	"os"
 	"salary_demo/command"
-	"salary_demo/contract"
-	"salary_demo/crypto"
 
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/urfave/cli"
 )
 
@@ -21,58 +17,6 @@ import (
 const generator = 7
 const prime = 150001
 const privateKey = 113
-
-func cryptTest() {
-	priv := &crypto.PrivateKey{
-		PublicKey: crypto.PublicKey{
-			//here we use a small generator g=7, a prime num p=150001, and a private key x=113
-			G: new(big.Int).SetInt64(generator),
-			P: new(big.Int).SetInt64(prime),
-		},
-		X: new(big.Int).SetInt64(privateKey),
-	}
-	priv.H = new(big.Int).Exp(priv.G, priv.X, priv.P)
-
-	fmt.Println("+++++The public key:", priv.PublicKey)
-
-	sim, auth, sc, err := contract.InitWithSim()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	addrTest := "0x" + common.Bytes2Hex(auth.From.Bytes())
-
-	balance, _ := contract.GetBalance(sc, addrTest, priv)
-	fmt.Println("+++++The init balance:", balance)
-
-	//set balance=500
-	contract.SetBalance(sim, auth, sc, addrTest, big.NewInt(500), priv)
-	//so balance=500
-	balance, _ = contract.GetBalance(sc, addrTest, priv)
-
-	//set salary=200
-	contract.SetSalary(sim, auth, sc, addrTest, big.NewInt(200), priv)
-	//pay salary
-	contract.PaySalary(sim, auth, sc, addrTest)
-	//so balance = 500+200=700
-	balance, _ = contract.GetBalance(sc, addrTest, priv)
-
-	//take 100 away
-	contract.TakeMoney(sim, auth, sc, addrTest, big.NewInt(100), priv)
-	//so balance = 700-100=600
-	balance, _ = contract.GetBalance(sc, addrTest, priv)
-
-	//take 200 away
-	contract.TakeMoney(sim, auth, sc, addrTest, big.NewInt(700), priv)
-	//so balance = 600-200=400
-	balance, _ = contract.GetBalance(sc, addrTest, priv)
-
-	//hash test
-	//contract.HashTest(sim, auth, sc)
-
-	//VerifyMembershipTest test
-	//contract.VerifyMembershipTest(sim, auth, sc)
-}
 
 //Env represents the environment
 var Env *command.Environment
@@ -118,7 +62,7 @@ L:
 		case "withdraw":
 			command.Withdraw(Env, Account, parm1, parm2)
 		case "test":
-			cryptTest()
+			command.Test(Env, Account)
 		case "stop":
 			break L
 		default:

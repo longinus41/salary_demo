@@ -109,7 +109,7 @@ contract Salary {
 		tmp = modInverse(tmp,prime);										//[Q/(g^m1)]^-e1
 		Z1 = mulmod(Z1, tmp, prime);										//Z1 = P^s1 * [Q/(g^m1)]^-e1
 
-		uint256 e2 = myHash(Y1,Z1);
+		uint256 e2 = simpleHash(Y1,Z1);
 		tmp = modInverse(modExp(publicKey[_addr],e2,prime),prime);          //h^-ek, where ek=e2
 		uint256 Yk = modExp(generator,_proof3,prime);						//g^sk
 		Yk = mulmod(Yk, tmp, prime);										//Yk = g^sk * h^-ek
@@ -121,7 +121,7 @@ contract Salary {
 		tmp = modInverse(tmp,prime);										//[Q/(g^mk)]^-ek
 		Zk = mulmod(Zk, tmp, prime);										//Zk = P^sk * [Q/(g^mk)]^-ek
 
-		return (_proof1 == myHash(Yk,Zk)?true:false);
+		return (_proof1 == simpleHash(Yk,Zk)?true:false);
 	}
 
 	//Calculate x**y mod |m| using a brute force approach, more efficient method will be added in the future.
@@ -147,14 +147,28 @@ contract Salary {
 		return modExp(_g, _n-2, _n);
 	}
 
-	function myHash(uint256 _x, uint256 _y) public pure returns(uint256) {
+	function simpleHash(uint256 _x, uint256 _y) public pure returns(uint256) {
 		return _x+_y;
 	}
 
-	function toBytes(uint256 _x) public pure returns(bytes memory b){
-        b = new bytes(32);
-        for (uint i = 0; i < 32; i++) {
-            b[i] = byte(uint8(_x / (2**(8*(31 - i)))));
-        }
+	function myHash(uint256 _x, uint256 _y) public pure returns(uint256){
+		uint256 abs;
+		if(_x>_y){
+			abs = _x-_y;
+		}else{
+			abs = _y-_x;
+		}
+		bytes32 b = keccak256(abi.encode(abs));
+		return bytesToUint(b);
 	}
+
+
+	function bytesToUint(bytes32 b) public pure returns (uint256){
+		uint256 number;
+		for(uint i = 0; i < b.length; i++){
+            number = number + uint8(b[i])*(2**(8*(b.length-(i+1))));
+        }
+        return number;
+	}
+
 }

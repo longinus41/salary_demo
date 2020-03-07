@@ -68,7 +68,7 @@ func SetMembershipProof(priv *PrivateKey, P, Q, m2, j *big.Int) (e1, s1, s2 *big
 		// suppose m=m2, which means j=2, and the ring starts from 2
 		Y2 := new(big.Int).Exp(priv.G, v, priv.P)   //Y2=g^v
 		Z2 := new(big.Int).Exp(P, v, priv.P)        //Z2=P^v
-		e1 = Hash(Y2, Z2)                           //e1=H(Y2,Z2)
+		e1 = simpleHash(Y2, Z2)                     //e1=H(Y2,Z2)
 		s1, _ = rand.Int(rand.Reader, pSubOne)      //s1=random() and less than P-1
 		tmp := new(big.Int).Exp(priv.H, e1, priv.P) //h^e1
 		tmp.ModInverse(tmp, priv.P)                 //h^-e1
@@ -80,17 +80,17 @@ func SetMembershipProof(priv *PrivateKey, P, Q, m2, j *big.Int) (e1, s1, s2 *big
 		Z1 := new(big.Int).Exp(P, s1, priv.P)       //P^s1
 		Z1.Mul(Z1, tmp)                             //P^s1 * Q^-e1
 		Z1.Mod(Z1, priv.P)                          //mod p
-		e2 := Hash(Y1, Z1)                          //e2=H(Y1,Z1)
+		e2 := simpleHash(Y1, Z1)                    //e2=H(Y1,Z1)
 		s2 = new(big.Int).Mul(e2, priv.X)           //e2*x
-		//s2.Mod(s2, pSubOne)                         //mod p-1
-		s2.Add(s2, v) //s2=e2*x+v
+		s2.Mod(s2, pSubOne)                         //mod p-1
+		s2.Add(s2, v)                               //s2=e2*x+v
 		//here do not need more mod operation
 		return e1, s1, s2, nil
 	}
 	//m=m1, which means j=1, and the ring starts from 1
 	Y1 := new(big.Int).Exp(priv.G, v, priv.P)   //Y1 = g^v
 	Z1 := new(big.Int).Exp(P, v, priv.P)        //Z1=P^v
-	e2 := Hash(Y1, Z1)                          //e2=H(Y1,Z1)
+	e2 := simpleHash(Y1, Z1)                    //e2=H(Y1,Z1)
 	s2, _ = rand.Int(rand.Reader, pSubOne)      //s1=random() and less than P-1
 	tmp := new(big.Int).Exp(priv.H, e2, priv.P) //h^e2
 	tmp.ModInverse(tmp, priv.P)                 //h^-e2
@@ -106,10 +106,10 @@ func SetMembershipProof(priv *PrivateKey, P, Q, m2, j *big.Int) (e1, s1, s2 *big
 	Z2 := new(big.Int).Exp(P, s2, priv.P)       //P^s2
 	Z2.Mul(Z2, tmp)                             //Z2=P^s2*(Q*g^-m2)*-e2
 	Z2.Mod(Z2, priv.P)                          //mod p
-	e1 = Hash(Y2, Z2)                           //e1=H(Y2,Z2)
+	e1 = simpleHash(Y2, Z2)                     //e1=H(Y2,Z2)
 	s1 = new(big.Int).Mul(e1, priv.X)           //e1*x
-	//s1.Mod(s1, pSubOne)                         //mod p-1
-	s1.Add(s1, v) //s1=e1*x+v
+	s1.Mod(s1, pSubOne)                         //mod p-1
+	s1.Add(s1, v)                               //s1=e1*x+v
 	return e1, s1, s2, nil
 }
 
@@ -129,7 +129,7 @@ func VerifyMembership(priv *PrivateKey, P, Q, mk, proof1, proof2, proof3 *big.In
 	Z1 = Z1.Mul(Z1, tmp) //P^s1 * Q^-e1
 	Z1.Mod(Z1, priv.P)   //mod p
 	fmt.Println("P^s1 * Q^-e1", Z1)
-	e2 := Hash(Y1, Z1)
+	e2 := simpleHash(Y1, Z1)
 
 	tmp = new(big.Int).Exp(priv.H, e2, priv.P)
 	tmp.ModInverse(tmp, priv.P)
@@ -145,7 +145,7 @@ func VerifyMembership(priv *PrivateKey, P, Q, mk, proof1, proof2, proof3 *big.In
 	Z2 := new(big.Int).Exp(P, proof3, priv.P)
 	Z2 = Z2.Mul(Z2, tmp)
 	Z2.Mod(Z2, priv.P)
-	e1 := Hash(Y2, Z2)
+	e1 := simpleHash(Y2, Z2)
 	if e1.Cmp(proof1) == 0 {
 		//fmt.Println("Verify Ci:", P, "Di:", Q, "m2=2^i", mk)
 		//fmt.Println("e1,s1,s2:",proof,s1,sk)

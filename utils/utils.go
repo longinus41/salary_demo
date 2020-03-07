@@ -40,6 +40,11 @@ func ToInt32(long int64) int {
 	return *(*int)(unsafe.Pointer(&long))
 }
 
+//func Bytes32(x *big.Int) []byte {
+//buf := make([]byte, 32)
+//return buf[x.abs.bytes(buf):]
+//}
+
 //ConvertToBinArray converts decimal number to a binary number in a ascending sort array.
 //e.g. ConvertToBinArray(300) = [0 0 1 1 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
 func ConvertToBinArray(n *big.Int) [](*big.Int) {
