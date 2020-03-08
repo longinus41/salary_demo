@@ -79,7 +79,7 @@ contract Salary {
 			return false;
 	}
 
-	//This function returns true for test here.
+
 	function verifyRangeProof(address _addr, uint256[] memory _proof, uint256[] memory _cArray, uint256[] memory _dArray, uint256 _c, uint256 _d)
 	public view
 	returns (bool result){

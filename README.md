@@ -25,7 +25,11 @@ $go run main.go
 
 It generates genesis account with a given keystore first, and initiate the simulated backend which looks similar to Ethereum testnet. Then the salary contract will be deployed on the backend automatically.
 
-We will provide deployment on Ethereum and testnets like Ganache in the future.
+Now we support deployment on Ethereum and testnets. 
+Take Ganache, for instance. First set the right networkID in `init.go`(e.g "http://127.0.0.1:8545") since the program can init from the right Ganache network. 
+Then you can Use the command to init the demo.
+`>init [private key] [contract address]`
+Note that it is simple and crude to expose the private key, and we don't recommend you do this on Ethereum.
 
 ### set balance
 `>setbalance [address] [amount]`
