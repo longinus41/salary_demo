@@ -1,0 +1,9 @@
+{
+    "prime": 150001,
+    "generator": 7,
+    "private_key": 113,
+    "network_name": "Ganache",
+    "network": "http://127.0.0.1:8545",
+    "gas_limit": 1000000000
+    
+}

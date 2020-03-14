@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"math/big"
+	myConfig "salary_demo/config"
 	"salary_demo/contract"
 	"salary_demo/utils"
 )
@@ -104,6 +105,7 @@ func Test(env *Environment, account *Account) bool {
 		return false
 	}
 	fmt.Println("test...")
-	contract.HashTest(env.Backend, account.Auth, env.Contract)
+	//contract.HashTest(env.Backend, account.Auth, env.Contract)
+	myConfig.Init()
 	return true
 }

@@ -21,7 +21,7 @@ func Sha3(x, y *big.Int) *big.Int {
 	return new(big.Int).SetBytes(result)
 }
 
-//Sha3Sol returns a sha3-256 of integer X
+//Sha3Sol returns a sha3-256 of integer X and Y
 func Sha3Sol(x, y *big.Int) *big.Int {
 	abs := new(big.Int).Sub(x, y)
 	abs.Abs(abs)
