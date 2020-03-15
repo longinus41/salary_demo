@@ -54,6 +54,5 @@ func Init() (*MainConfig, Configs) {
 		conf = mainConfig
 		confs = allConfigs
 	})
-	//fmt.Println(conf.Prime)
 	return conf, confs
 }

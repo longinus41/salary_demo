@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"log"
 	"math/big"
-	myConfig "salary_demo/config"
+
+	//myConfig "salary_demo/config"
 	"salary_demo/contract"
 	"salary_demo/utils"
 )
@@ -96,16 +97,4 @@ func Withdraw(env *Environment, account *Account, address, money string) bool {
 		return result
 	}
 	return result
-}
-
-//Test is a test function
-func Test(env *Environment, account *Account) bool {
-	if env == nil || account == nil {
-		fmt.Println("init the envrionment first!")
-		return false
-	}
-	fmt.Println("test...")
-	//contract.HashTest(env.Backend, account.Auth, env.Contract)
-	myConfig.Init()
-	return true
 }

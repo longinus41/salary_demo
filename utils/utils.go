@@ -14,13 +14,12 @@ const Green = "\033[1;32m%s\033[0m\n"
 const M = 100000
 
 //Log uses the brute force algorithm for logarithmic computation.
-func Log(x, y, p *big.Int) (z *big.Int, err error) {
+func Log(x, y, p *big.Int) (*big.Int, error) {
 	var i int64
 	for i = 0; i <= M; i++ {
 		iBig := big.NewInt(i)
 		if new(big.Int).Exp(x, iBig, p).Cmp(y) == 0 {
-			z = iBig
-			return z, nil
+			return iBig, nil
 		}
 	}
 	return nil, errors.New("Error: cannot find discrete logarithm")
@@ -39,11 +38,6 @@ func FromHex(hex string) *big.Int {
 func ToInt32(long int64) int {
 	return *(*int)(unsafe.Pointer(&long))
 }
-
-//func Bytes32(x *big.Int) []byte {
-//buf := make([]byte, 32)
-//return buf[x.abs.bytes(buf):]
-//}
 
 //ConvertToBinArray converts decimal number to a binary number in a ascending sort array.
 //e.g. ConvertToBinArray(300) = [0 0 1 1 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]

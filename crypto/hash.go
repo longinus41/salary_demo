@@ -7,10 +7,9 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
-//Hash returns a hash of x,y TBA
-func simpleHash(X, Y *big.Int) (h *big.Int) {
-	h = new(big.Int).Add(X, Y)
-	return
+//just a test hash function, which returns a sum of x and y simply.
+func simpleHash(X, Y *big.Int) *big.Int {
+	return new(big.Int).Add(X, Y)
 }
 
 //Sha3 returns a sha3-256 of integer X and Y
@@ -21,7 +20,7 @@ func Sha3(x, y *big.Int) *big.Int {
 	return new(big.Int).SetBytes(result)
 }
 
-//Sha3Sol returns a sha3-256 of integer X and Y
+//Sha3Sol returns a sha3-256 of integer X and Y, which based on Solidity abi encoding way.
 func Sha3Sol(x, y *big.Int) *big.Int {
 	abs := new(big.Int).Sub(x, y)
 	abs.Abs(abs)
